@@ -27,7 +27,7 @@
 	end
 
 	function codelite.esc(value)
-		local result = value:gsub('"', '&quot;')
+		local result = value:gsub('"', '\\&quot;')
 		result = result:gsub('<', '&lt;')
 		result = result:gsub('>', '&gt;')
 		return result
