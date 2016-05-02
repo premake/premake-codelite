@@ -193,7 +193,7 @@
 			_x(4, '<IncludePath Value="%s"/>', project.getrelative(cfg.project, includedir))
 		end
 		for _, define in ipairs(cfg.defines) do
-			_x(4, '<Preprocessor Value="%s"/>', define)
+			_x(4, '<Preprocessor Value="%s"/>', p.esc(define))
 		end
 		_p(3, '</Compiler>')
 	end
@@ -382,7 +382,8 @@
 		Makefile    = "",
 		SharedLib   = "Dynamic Library",
 		StaticLib   = "Static Library",
-		WindowedApp = "Executable"
+		WindowedApp = "Executable",
+		Utility     = "",
 	}
 
 	m.debuggers =
