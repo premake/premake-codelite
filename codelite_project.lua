@@ -123,7 +123,21 @@
 			end,
 			-- source files are handled at the leaves
 			onleaf = function(node, depth)
-				_p(depth, '<File Name="%s"/>', node.relpath)
+
+				local excludesFromBuild = {}
+				for cfg in project.eachconfig(prj) do
+					local cfgname = codelite.cfgname(cfg)
+					local fcfg = p.fileconfig.getconfig(node, cfg)
+					if not fcfg or fcfg.flags.ExcludeFromBuild then
+						table.insert(excludesFromBuild, cfgname)
+					end
+				end
+
+				if #excludesFromBuild > 0 then
+					_p(depth, '<File Name="%s" ExcludeProjConfig="%s" />', node.relpath, table.concat(excludesFromBuild, ';'))
+				else
+					_p(depth, '<File Name="%s"/>', node.relpath)
+				end
 			end,
 		}, false, 1)
 	end
@@ -193,7 +207,7 @@
 			_x(4, '<IncludePath Value="%s"/>', project.getrelative(cfg.project, includedir))
 		end
 		for _, define in ipairs(cfg.defines) do
-			_x(4, '<Preprocessor Value="%s"/>', define)
+			_x(4, '<Preprocessor Value="%s"/>', p.esc(define))
 		end
 		_p(3, '</Compiler>')
 	end
@@ -382,7 +396,8 @@
 		Makefile    = "",
 		SharedLib   = "Dynamic Library",
 		StaticLib   = "Static Library",
-		WindowedApp = "Executable"
+		WindowedApp = "Executable",
+		Utility     = "",
 	}
 
 	m.debuggers =

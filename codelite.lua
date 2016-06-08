@@ -27,7 +27,10 @@
 	end
 
 	function codelite.esc(value)
-		return value
+		local result = value:gsub('"', '\\&quot;')
+		result = result:gsub('<', '&lt;')
+		result = result:gsub('>', '&gt;')
+		return result
 	end
 
 	function codelite.generateWorkspace(wks)
